@@ -268,7 +268,7 @@ and dbclass.classid = dbName.classid", ssfId);
                                     olaCmd.CommandText += " totaltime = " + time;
                                     if (currentOlaStatusIsNotActivated)
                                     {
-                                        olaCmd.CommandText += ", runnerStatus='finished'";
+                                        olaCmd.CommandText += ", runnerStatus='finishedTimeOk'";
                                     }
                                     first = false;
                                 }
