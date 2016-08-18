@@ -43,9 +43,11 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startlistsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importStartlistToOLAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createXMLimportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createSSFTimingStartlistFromOLAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createXMLimportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmbRace = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,10 +86,11 @@
             this.cmbOLA.Name = "cmbOLA";
             this.cmbOLA.Size = new System.Drawing.Size(288, 21);
             this.cmbOLA.TabIndex = 3;
+            this.cmbOLA.SelectedIndexChanged += new System.EventHandler(this.cmbOLA_SelectedIndexChanged);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(15, 107);
+            this.button1.Location = new System.Drawing.Point(15, 147);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 4;
@@ -97,7 +100,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(96, 107);
+            this.button2.Location = new System.Drawing.Point(96, 147);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 5;
@@ -133,7 +136,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(15, 136);
+            this.checkBox1.Location = new System.Drawing.Point(15, 176);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(93, 17);
             this.checkBox1.TabIndex = 8;
@@ -162,7 +165,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             // 
             // startlistsToolStripMenuItem
@@ -183,18 +186,6 @@
             this.importStartlistToOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
             this.importStartlistToOLAToolStripMenuItem.Text = "IOF 2 OLA";
             // 
-            // createSSFTimingStartlistFromOLAToolStripMenuItem
-            // 
-            this.createSSFTimingStartlistFromOLAToolStripMenuItem.Name = "createSSFTimingStartlistFromOLAToolStripMenuItem";
-            this.createSSFTimingStartlistFromOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
-            this.createSSFTimingStartlistFromOLAToolStripMenuItem.Text = "Create SSFTiming startlist from OLA";
-            // 
-            // createSSFTimingRelaystartlistFromOLAToolStripMenuItem
-            // 
-            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Name = "createSSFTimingRelaystartlistFromOLAToolStripMenuItem";
-            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
-            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Text = "Create SSFTiming relaystartlist from OLA";
-            // 
             // createXMLimportFileToolStripMenuItem
             // 
             this.createXMLimportFileToolStripMenuItem.Name = "createXMLimportFileToolStripMenuItem";
@@ -202,11 +193,44 @@
             this.createXMLimportFileToolStripMenuItem.Text = "Create XML-import file";
             this.createXMLimportFileToolStripMenuItem.Click += new System.EventHandler(this.createXMLimportFileToolStripMenuItem_Click);
             // 
+            // createSSFTimingStartlistFromOLAToolStripMenuItem
+            // 
+            this.createSSFTimingStartlistFromOLAToolStripMenuItem.Name = "createSSFTimingStartlistFromOLAToolStripMenuItem";
+            this.createSSFTimingStartlistFromOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.createSSFTimingStartlistFromOLAToolStripMenuItem.Text = "Create SSFTiming startlist from OLA";
+            this.createSSFTimingStartlistFromOLAToolStripMenuItem.Click += new System.EventHandler(this.createSSFTimingStartlistFromOLAToolStripMenuItem_Click);
+            // 
+            // createSSFTimingRelaystartlistFromOLAToolStripMenuItem
+            // 
+            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Name = "createSSFTimingRelaystartlistFromOLAToolStripMenuItem";
+            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Text = "Create SSFTiming relaystartlist from OLA";
+            // 
+            // cmbRace
+            // 
+            this.cmbRace.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRace.FormattingEnabled = true;
+            this.cmbRace.Location = new System.Drawing.Point(15, 120);
+            this.cmbRace.Name = "cmbRace";
+            this.cmbRace.Size = new System.Drawing.Size(288, 21);
+            this.cmbRace.TabIndex = 11;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 104);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "OLA-Race";
+            // 
             // SSFTimingSync
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(750, 262);
+            this.Controls.Add(this.cmbRace);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.label3);
@@ -248,6 +272,8 @@
         private System.Windows.Forms.ToolStripMenuItem createXMLimportFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createSSFTimingStartlistFromOLAToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createSSFTimingRelaystartlistFromOLAToolStripMenuItem;
+        private System.Windows.Forms.ComboBox cmbRace;
+        private System.Windows.Forms.Label label4;
     }
 }
 

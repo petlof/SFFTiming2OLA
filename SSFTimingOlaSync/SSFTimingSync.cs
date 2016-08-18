@@ -109,11 +109,13 @@ namespace SSFTimingOlaSync
             public int SSFTimingEventId { get; set; }
             public int OlaEventId { get; set; }
             public bool StartTime2 { get; set; }
+            public int OlaRaceId { get; set; }
         }
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             int ssfId = ((StartArgs)e.Argument).SSFTimingEventId;
             int olaId = ((StartArgs)e.Argument).OlaEventId;
+            int raceId = ((StartArgs)e.Argument).OlaRaceId;
             bool startTime2 = ((StartArgs)e.Argument).StartTime2;
             string initialCommand = string.Format(@"select  dbName.FirstName, dbName.LastName,
  dbTeam.Name as teamname, dbclass.name as classname,
@@ -133,7 +135,7 @@ and dbclass.classid = dbName.classid", ssfId);
             {
                 ssfCmd.CommandText = initialCommand;
 
-                ParseReader(ssfCmd, olaId);
+                ParseReader(ssfCmd, olaId, raceId);
 
                 while (!backgroundWorker1.CancellationPending)
                 {
@@ -152,7 +154,7 @@ and dbclass.classid = dbName.classid", ssfId);
                                                  string.Format(
                                                      @" and dbName.Startno in (select distinct startno from dbLog where raceId={0} and logid > {1})", ssfId,
                                                      lastLogId);
-                        ParseReader(ssfCmd, olaId);
+                        ParseReader(ssfCmd, olaId, raceId);
                     }
                     lastLogId = maxLogId;
 
@@ -161,7 +163,7 @@ and dbclass.classid = dbName.classid", ssfId);
             }
         }
 
-        private void ParseReader(IDbCommand ssfCmd, int olaEventId)
+        private void ParseReader(IDbCommand ssfCmd, int olaEventId, int olaRaceId)
         {
             using (var reader = ssfCmd.ExecuteReader())
             {
@@ -194,8 +196,8 @@ and dbclass.classid = dbName.classid", ssfId);
                         }
 
                         olaCmd.CommandText = "select results.resultId, startTime, finishTime, totalTime, "
-                                             + "runnerStatus from results, entries where entries.entryId=results.entryId "
-                                             + " and entries.eventId=" + olaEventId + " and results.bibNumber=" + startNumber;
+                                             + "runnerStatus from results, entries, raceClasses where entries.entryId=results.entryId and results.RaceClassId=raceClasses.RaceClassId and raceClasses.eventRaceId=" + olaRaceId
+                                             + " and entries.eventId=" + olaEventId + " and results.bibNumber=" + startNumber + " and raceClasses.raceClassStatus <> 'notUsed'";
 
                         DateTime olaStartTime = DateTime.MinValue;
                         DateTime olaFinishTime = DateTime.MinValue;
@@ -339,7 +341,9 @@ and dbclass.classid = dbName.classid", ssfId);
             {
                 OlaEventId = (cmbOLA.SelectedItem as ListComp).Id,
                 SSFTimingEventId = (cmbSSF.SelectedItem as ListComp).Id,
-                StartTime2 = checkBox1.Checked
+                StartTime2 = checkBox1.Checked,
+                OlaRaceId = (cmbRace.SelectedItem as ListComp).Id
+
             });
         }
 
@@ -423,10 +427,6 @@ and dbclass.classid = dbName.classid", ssfId);
                             xtw.WriteElementString("ClubId", clubId.ToString());
                             xtw.WriteElementString("Name", club.Key);
                             xtw.WriteElementString("ShortName", club.Key);
-                            /* xtw.WriteStartElement("CountryId");
-                                 xtw.WriteAttributeString("value",club.Key);    
-                             xtw.WriteEndElement();
-                             */
                             xtw.WriteEndElement();
 
                             foreach (var entry in club)
@@ -435,7 +435,7 @@ and dbclass.classid = dbName.classid", ssfId);
                                 xtw.WriteAttributeString("nonCompetitor", "N");
                                 xtw.WriteElementString("EntryId", entry.CardNo.ToString());
                                 xtw.WriteStartElement("Person");
-                                xtw.WriteAttributeString("sex", importClass.Class.Sex);
+                                xtw.WriteAttributeString("sex", entry.Class.Sex);
 
                                 xtw.WriteStartElement("PersonName");
                                 xtw.WriteElementString("Family", entry.LastName);
@@ -501,6 +501,85 @@ and dbclass.classid = dbName.classid", ssfId);
                         olaConnection.Close();
                     }
                 }
+            }
+        }
+
+        private void createSSFTimingStartlistFromOLAToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "*.csv|*.csv";
+            sfd.Title = "Save startlist as";
+            if (sfd.ShowDialog(this) == DialogResult.OK)
+            {
+                using (var sw = new StreamWriter(sfd.FileName, false, Encoding.Default))
+                {
+                    sw.WriteLine("Förnamn;Efternamn;Klubb;Klass;Startnr;Starttid;Födelsedatum;Chipnr;Chipnr2");
+                    using (var olaConnection = new MySqlConnection(ConfigurationManager.ConnectionStrings["ola"].ConnectionString))
+                    {
+                        olaConnection.Open();
+                        using (IDbCommand cmd = olaConnection.CreateCommand())
+                        {
+                            string sql = @"select r.bibNumber, r.startTime, p.firstName, p.FamilyName,
+                            o.name, epc.cardNumber, ec.name as classname
+                            from entries e, results r, raceClasses rc, electronicPunchingCards epc,
+                            persons p, organisations o, eventClasses ec
+                            where r.raceClassid = rc.raceClassId and 
+                            ec.eventClassId=rc.eventClassId and
+                            epc.cardId = r.electronicPunchingCardId and p.personId = e.competitorId 
+                            and e.entryId = r.entryId and rc.eventRaceId=1 
+                            and p.defaultOrganisationId=o.organisationId and rc.raceClassStatus <> 'notUsed' order by bibNumber";
+                            cmd.CommandText = sql;
+
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    sw.WriteLine(reader["firstName"] as string + ";" +
+                                        reader["FamilyName"] as string + ";" +
+                                        reader["Name"] as string + ";" +
+                                        reader["classname"] as string + ";" +
+                                        reader["bibNumber"] as string + ";" +
+                                        reader["startTime"] as string + ";;" +
+                                        reader["cardNumber"].ToString() + ";" +
+                                        (Convert.ToInt32(reader["cardNumber"]) + 1000));
+                                }
+                                reader.Close();
+                            }
+                            sw.Close();
+                            /*foreach (var runner in runners)
+                            {
+                                var startTime = importClass.StartDate.ToShortDateString() + " " + runner.StartTime + ":00";
+                                cmd.CommandText = "update results set bibNumber=" + runner.BibNumber + ", allocatedStartTime='" + startTime + "', startTime = '" + startTime + "' where entryid = (select entryId from entries where externalId = " + runner.CardNo + ")";
+                                cmd.ExecuteNonQuery();
+                            }*/
+                        }
+
+                        olaConnection.Close();
+                    }
+                }
+            }
+        }
+
+        private void cmbOLA_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            using (IDbCommand cmd = m_olaConnection.CreateCommand())
+            {
+                cmd.CommandText = "select eventraceId, name from EventRaces where eventId=" + (cmbOLA.SelectedItem as ListComp).Id;
+
+                cmbRace.Items.Clear();
+                IDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var cmp = new ListComp();
+                    cmp.Id = Convert.ToInt32(reader["eventRaceId"].ToString());
+                    cmp.Name = Convert.ToString(reader["name"]);
+                    cmbRace.Items.Add(cmp);
+                }
+                reader.Close();
+                cmd.Dispose();
+
+                if (cmbRace.Items.Count > 0)
+                    cmbRace.SelectedIndex = 0;
             }
         }
     }
