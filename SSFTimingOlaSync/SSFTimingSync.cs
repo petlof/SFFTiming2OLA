@@ -12,6 +12,8 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.IO;
+using System.Xml;
 
 namespace SSFTimingOlaSync
 {
@@ -110,12 +112,12 @@ namespace SSFTimingOlaSync
         }
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            int ssfId = ((StartArgs) e.Argument).SSFTimingEventId;
-            int olaId = ((StartArgs) e.Argument).OlaEventId;
+            int ssfId = ((StartArgs)e.Argument).SSFTimingEventId;
+            int olaId = ((StartArgs)e.Argument).OlaEventId;
             bool startTime2 = ((StartArgs)e.Argument).StartTime2;
             string initialCommand = string.Format(@"select  dbName.FirstName, dbName.LastName,
  dbTeam.Name as teamname, dbclass.name as classname,
- " + (startTime2 ? "dbName.startTime2" : "dbName.startTime")+ @" as allocatedStartTime, dbRuns.StartTime,dbRuns.FinishTime,dbRuns.RaceTime, dbName.Startno, dbRuns.Status
+ " + (startTime2 ? "dbName.startTime2" : "dbName.startTime") + @" as allocatedStartTime, dbRuns.StartTime,dbRuns.FinishTime,dbRuns.RaceTime, dbName.Startno, dbRuns.Status
 from dbName, dbTeam, dbclass, dbRuns
 where dbName.raceId = {0}
 and dbTeam.raceId = {0}
@@ -194,7 +196,7 @@ and dbclass.classid = dbName.classid", ssfId);
                         olaCmd.CommandText = "select results.resultId, startTime, finishTime, totalTime, "
                                              + "runnerStatus from results, entries where entries.entryId=results.entryId "
                                              + " and entries.eventId=" + olaEventId + " and results.bibNumber=" + startNumber;
-                        
+
                         DateTime olaStartTime = DateTime.MinValue;
                         DateTime olaFinishTime = DateTime.MinValue;
                         int olaTime = -9;
@@ -345,5 +347,175 @@ and dbclass.classid = dbName.classid", ssfId);
         {
             backgroundWorker1.CancelAsync();
         }
+
+        private void createXMLimportFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Select IOF startlist to import";
+            if (ofd.ShowDialog(this) == DialogResult.OK)
+            {
+                string[] lines = File.ReadAllLines(ofd.FileName, Encoding.Default);
+                string[] header = lines[0].Split(new string[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
+                lines = lines.Skip(1).ToArray();
+
+                int idxChip = Array.IndexOf(header, "ID");
+                int idxClub = Array.IndexOf(header, "FED");
+                int idxLastName = Array.IndexOf(header, "Surname");
+                int idxFirstName = Array.IndexOf(header, "First name");
+                int idxBibNo = Array.IndexOf(header, "Chest No");
+                int idxStartTime = Array.IndexOf(header, "Start Time");
+                int idxHeat = Array.IndexOf(header, "Heat");
+
+                FrmSelectClass importClass = new FrmSelectClass();
+                if (importClass.ShowDialog(this) == DialogResult.OK)
+                {
+                    List<Runner> runners = new List<Runner>();
+                    foreach (var line in lines)
+                    {
+                        string[] parts = line.Split(new string[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
+                        int chip = int.Parse(parts[idxChip]);
+                        string club = parts[idxClub];
+                        string firstName = parts[idxFirstName];
+                        string lastName = parts[idxLastName];
+                        int bibNo = int.Parse(parts[idxBibNo]);
+                        string startTime = parts[idxStartTime];
+
+                        EventClass eclass = importClass.Class;
+                        if (importClass.EventWithHeats)
+                        {
+                            if (parts[idxHeat] == "1")
+                                eclass = importClass.Heat1;
+                            else if (parts[idxHeat] == "2")
+                                eclass = importClass.Heat2;
+                            else if (parts[idxHeat] == "3")
+                                eclass = importClass.Heat3;
+                            else
+                            {
+                                MessageBox.Show("Unknown heat!");
+                            }
+                        }
+
+                        runners.Add(new Runner
+                        {
+                            CardNo = chip,
+                            Club = club,
+                            Country = club,
+                            FirstName = firstName,
+                            LastName = lastName,
+                            BibNumber = bibNo,
+                            StartTime = startTime,
+                            Class = eclass
+                        });
+                    }
+
+                    using (var xtw = XmlWriter.Create(ofd.FileName + ".xml", new XmlWriterSettings() { Indent = true }))
+                    {
+                        xtw.WriteStartElement("EntryList");
+                        xtw.WriteStartElement("IOFVersion");
+                        xtw.WriteAttributeString("version", "2.0.3");
+                        xtw.WriteEndElement();
+
+                        int clubId = 1000001;
+                        foreach (var club in runners.GroupBy(x => x.Club))
+                        {
+                            xtw.WriteStartElement("ClubEntry");
+                            xtw.WriteStartElement("Club");
+                            xtw.WriteElementString("ClubId", clubId.ToString());
+                            xtw.WriteElementString("Name", club.Key);
+                            xtw.WriteElementString("ShortName", club.Key);
+                            /* xtw.WriteStartElement("CountryId");
+                                 xtw.WriteAttributeString("value",club.Key);    
+                             xtw.WriteEndElement();
+                             */
+                            xtw.WriteEndElement();
+
+                            foreach (var entry in club)
+                            {
+                                xtw.WriteStartElement("Entry");
+                                xtw.WriteAttributeString("nonCompetitor", "N");
+                                xtw.WriteElementString("EntryId", entry.CardNo.ToString());
+                                xtw.WriteStartElement("Person");
+                                xtw.WriteAttributeString("sex", importClass.Class.Sex);
+
+                                xtw.WriteStartElement("PersonName");
+                                xtw.WriteElementString("Family", entry.LastName);
+
+                                xtw.WriteStartElement("Given");
+                                xtw.WriteAttributeString("sequence", 1.ToString());
+                                xtw.WriteValue(entry.FirstName);
+                                xtw.WriteEndElement();
+
+                                xtw.WriteEndElement();
+
+                                /*xtw.WriteStartElement("PersonId");
+                                xtw.WriteAttributeString("idManager", "Sweden");
+                                xtw.WriteAttributeString("type", "nat");
+                                xtw.WriteValue(entry.EntryId.ToString());
+                                xtw.WriteEndElement();*/
+
+                                xtw.WriteEndElement();
+
+                                xtw.WriteStartElement("CCard");
+                                xtw.WriteElementString("CCardId", entry.CardNo.ToString());
+                                xtw.WriteStartElement("PunchingUnitType");
+                                xtw.WriteAttributeString("value", "Emit");
+                                xtw.WriteEndElement();
+                                xtw.WriteEndElement();
+
+
+
+                                xtw.WriteStartElement("EntryClass");
+                                xtw.WriteAttributeString("sequence", "1");
+                                string classId = entry.Class.Id.ToString();
+                                xtw.WriteElementString("ClassId", classId);
+                                xtw.WriteEndElement();
+
+
+                                xtw.WriteEndElement();
+                            }
+
+                            clubId++;
+
+                            xtw.WriteEndElement();
+                        }
+
+                        xtw.WriteEndElement();
+                        xtw.Close();
+
+
+                    }
+
+                    if (MessageBox.Show("Do import", "Import generated XML-file in OLA och press OK to update with bibNumbers and StartTimes", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                    {
+                        var olaConnection = new MySqlConnection(ConfigurationManager.ConnectionStrings["ola"].ConnectionString);
+                        olaConnection.Open();
+                        using (IDbCommand cmd = olaConnection.CreateCommand())
+                        {
+                            foreach (var runner in runners)
+                            {
+                                var startTime = importClass.StartDate.ToShortDateString() + " " + runner.StartTime + ":00";
+                                cmd.CommandText = "update results set bibNumber=" + runner.BibNumber + ", allocatedStartTime='" + startTime + "', startTime = '" + startTime + "' where entryid = (select entryId from entries where externalId = " + runner.CardNo + ")";
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                        olaConnection.Close();
+                    }
+                }
+            }
+        }
+    }
+
+    class Runner
+    {
+        public int EntryId;
+        public int CardNo;
+        public string FirstName;
+        public string LastName;
+        public string Club;
+        public string Country;
+        public int BibNumber;
+        public string StartTime;
+        public EventClass Class;
+
     }
 }

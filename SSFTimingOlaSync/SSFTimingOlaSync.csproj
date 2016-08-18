@@ -48,6 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmSelectClass.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSelectClass.Designer.cs">
+      <DependentUpon>FrmSelectClass.cs</DependentUpon>
+    </Compile>
     <Compile Include="SSFTimingSync.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -56,6 +62,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmSelectClass.resx">
+      <DependentUpon>FrmSelectClass.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SSFTimingSync.resx">
       <DependentUpon>SSFTimingSync.cs</DependentUpon>
     </EmbeddedResource>
