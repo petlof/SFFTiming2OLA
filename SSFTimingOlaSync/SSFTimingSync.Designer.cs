@@ -46,8 +46,11 @@
             this.createXMLimportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createSSFTimingStartlistFromOLAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createREsultsFromOLAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.assignCardstorelayPersonsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmbRace = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -173,7 +176,9 @@
             this.startlistsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.importStartlistToOLAToolStripMenuItem,
             this.createSSFTimingStartlistFromOLAToolStripMenuItem,
-            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem});
+            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem,
+            this.createREsultsFromOLAToolStripMenuItem,
+            this.assignCardstorelayPersonsToolStripMenuItem});
             this.startlistsToolStripMenuItem.Name = "startlistsToolStripMenuItem";
             this.startlistsToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
             this.startlistsToolStripMenuItem.Text = "&Startlists";
@@ -205,6 +210,21 @@
             this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Name = "createSSFTimingRelaystartlistFromOLAToolStripMenuItem";
             this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
             this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Text = "Create SSFTiming relaystartlist from OLA";
+            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Click += new System.EventHandler(this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem_Click);
+            // 
+            // createREsultsFromOLAToolStripMenuItem
+            // 
+            this.createREsultsFromOLAToolStripMenuItem.Name = "createREsultsFromOLAToolStripMenuItem";
+            this.createREsultsFromOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.createREsultsFromOLAToolStripMenuItem.Text = "Create REsultsFromOLA";
+            this.createREsultsFromOLAToolStripMenuItem.Click += new System.EventHandler(this.createREsultsFromOLAToolStripMenuItem_Click);
+            // 
+            // assignCardstorelayPersonsToolStripMenuItem
+            // 
+            this.assignCardstorelayPersonsToolStripMenuItem.Name = "assignCardstorelayPersonsToolStripMenuItem";
+            this.assignCardstorelayPersonsToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.assignCardstorelayPersonsToolStripMenuItem.Text = "Assign cardstorelayPersons";
+            this.assignCardstorelayPersonsToolStripMenuItem.Click += new System.EventHandler(this.assignCardstorelayPersonsToolStripMenuItem_Click);
             // 
             // cmbRace
             // 
@@ -224,11 +244,22 @@
             this.label4.TabIndex = 10;
             this.label4.Text = "OLA-Race";
             // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(15, 199);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(64, 17);
+            this.checkBox2.TabIndex = 12;
+            this.checkBox2.Text = "Is Relay";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
             // SSFTimingSync
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(750, 262);
+            this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.cmbRace);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.checkBox1);
@@ -274,6 +305,9 @@
         private System.Windows.Forms.ToolStripMenuItem createSSFTimingRelaystartlistFromOLAToolStripMenuItem;
         private System.Windows.Forms.ComboBox cmbRace;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ToolStripMenuItem createREsultsFromOLAToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem assignCardstorelayPersonsToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
 
