@@ -197,7 +197,7 @@ and dbclass.classid = dbName.classid", ssfId);
                             inner join dbclass on (dbClass.RaceId={0} and dbclass.classId=dbName.ClassID)
                             inner join dbRelay on (dbRelay.RaceID={0} and dbRelay.NameID=dbName.ID)
                             left outer join dbRuns on (dbRuns.RaceID = {0} and dbRuns.StartNo = dbName.Startno)
-                            where dbName.raceId = {0} and leg=4", ssfId);
+                            where dbName.raceId = {0} and leg=3", ssfId);
 
                 string initialSplitCommand = string.Format(@"select dbName.FirstName as teamname, dbRelay.Firstname, dbRelay.LastName, dbRelay.Leg, 
                                 dbclass.name as classname, dbName.Startno, dbITime.runtime, dbITime.IPos, dbItime.ITime as Finishtime
@@ -212,7 +212,7 @@ and dbclass.classid = dbName.classid", ssfId);
                                 and dbRelay.NameID = dbName.ID
                                 and dbclass.course = dbITimeInfo.Course
                                 and dbITimeInfo.Ipos = dbITime.IPos
-                                and dbITimeInfo.Leg=dbRelay.Leg and dbRelay.Leg != 4", ssfId);
+                                and dbITimeInfo.Leg=dbRelay.Leg and dbRelay.Leg != 3", ssfId);
 
                 ssfCmd.CommandText = initialSplitCommand;
                 ParseRelaySplitReader(ssfCmd, olaId, raceId, relayLegInfo);
@@ -396,6 +396,7 @@ and dbclass.classid = dbName.classid", ssfId);
                         if (reader["RaceTime"] != null && reader["RaceTime"] != DBNull.Value)
                         {
                             time = GetSSFRunTime(reader["RaceTime"].ToString());
+                            time = ((int)(time / 100d)) * 100;
                         }
 
                         olaCmd.CommandText = "select results.resultId, startTime, finishTime, totalTime, "
@@ -1075,7 +1076,7 @@ and dbclass.classid = dbName.classid", ssfId);
                             where r.raceClassid = rc.raceClassId and 
                             ec.eventClassId=rc.eventClassId and
                             p.personId = e.competitorId 
-                            and e.entryId = r.entryId and rc.eventRaceId=2 
+                            and e.entryId = r.entryId and rc.eventRaceId=1
                             and p.defaultOrganisationId=o.organisationId and rc.raceClassStatus <> 'notUsed' order by className,runnerStatus desc, totalTime";
                             cmd.CommandText = sql;
 
@@ -1086,16 +1087,20 @@ and dbclass.classid = dbName.classid", ssfId);
                                 int curPl = 1;
                                 while (reader.Read())
                                 {
-                                    var time = formatTime(Convert.ToInt32(reader["totalTime"]), reader["runnerStatus"] as string);
-                                    var strPl = time == lastTime ? "=" : pl.ToString();
-                                    
-                                    sw.WriteLine(pl + ";" + reader["firstName"] as string + ";" +
-                                        reader["FamilyName"] as string + ";" +
-                                        reader["Name"] as string + ";" +
-                                        reader["classname"] as string + ";" +
-                                       time);
-                                    lastTime = time;
-                                    pl++;
+                                    //if (reader["totalTime"] != null && reader["totalTime"] != DBNull.Value)
+                                    {
+                                        var time = (reader["totalTime"] != null && reader["totalTime"] != DBNull.Value) ? formatTime(Convert.ToInt32(reader["totalTime"]), reader["runnerStatus"] as string, true, true, false) : "OKÄND";
+                                        var strPl = time == lastTime ? "=" : pl.ToString();
+
+                                        sw.WriteLine(pl + ";" + reader["firstName"] as string + ";" +
+                                            reader["FamilyName"] as string + ";" +
+                                            reader["Name"] as string + ";" +
+                                            reader["classname"] as string + ";" +
+                                           time);
+
+                                        lastTime = time;
+                                        pl++;
+                                    }
                                 }
                                 reader.Close();
                             }
@@ -1112,7 +1117,9 @@ and dbclass.classid = dbName.classid", ssfId);
              Dictionary<string,string> runnerStatus = new Dictionary<string,string>();
             runnerStatus.Add("notStarted", "DNS");
             runnerStatus.Add("passed", "OK");
-            runnerStatus.Add("notValid", "DSQ");
+            runnerStatus.Add("notValid", "MP");
+            runnerStatus.Add("notActivated", "Start");
+            runnerStatus.Add("disqualified", "DSQ");
             int iminutes;
             int iseconds;
             int ihours;
@@ -1127,7 +1134,7 @@ and dbclass.classid = dbName.classid", ssfId);
                     tenth = (int)Math.Floor((time - iminutes * 6000 - ihours * 360000 - iseconds * 100) / 10d);
 
 
-                    if (ihours > 0) {
+                    if (true|| ihours > 0) {
                         return (padZeros ? strPad(ihours, 2) : ihours + "") + ":" + strPad(iminutes, 2) + ":" + strPad(iseconds, 2) + (showTenthOfSecs ? "." + tenth : "");
                     } else {
                         return (padZeros ? strPad(iminutes, 2) : iminutes + "") + ":" + strPad(iseconds, 2) + (showTenthOfSecs ? "." + tenth : "");
@@ -1224,13 +1231,15 @@ and rc.raceClassStatus <> 'notUsed' order by cast(r.bibNumber as unsigned)";
                                              reader["familyName3"] as string + ";" +
                                              reader["card3"].ToString() + ";" +
                                              (Convert.ToInt32(reader["card3"]) + 1000) + ";" +
-                                             reader["Fiscode3"] as string + ";;" +
+                                             reader["Fiscode3"] as string + ";;" 
+                                             
+                                            /* +
 
                                              reader["firstName4"] as string + ";" +
                                              reader["familyName4"] as string + ";" +
                                              reader["card4"].ToString() + ";" +
                                              (Convert.ToInt32(reader["card4"]) + 1000) + ";" +
-                                             reader["Fiscode4"] as string + ";"
+                                             reader["Fiscode4"] as string + ";"*/
                                              );
 
                                          sw2.WriteLine(reader["bibNumber"] as string + ";" +
@@ -1254,12 +1263,12 @@ and rc.raceClassStatus <> 'notUsed' order by cast(r.bibNumber as unsigned)";
                                         (Convert.ToInt32(reader["card3"]) + 1000) + ";" +
                                         reader["Fiscode3"] as string);
 
-                                         sw2.WriteLine(reader["firstName4"] as string + ";" +
+                                        /* sw2.WriteLine(reader["firstName4"] as string + ";" +
                                         reader["familyName4"] as string + ";" +
                                         reader["card4"].ToString() + ";" +
                                         (Convert.ToInt32(reader["card4"]) + 1000) + ";" +
                                         reader["Fiscode4"] as string
-                                        );
+                                        );*/
                                          sw2.WriteLine();
 
                                      }
