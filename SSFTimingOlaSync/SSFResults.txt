@@ -1,0 +1,8 @@
+﻿select  dbName.FirstName, dbName.LastName,
+ dbTeam.Name as teamname, dbclass.name as classname,
+ dbName.startTime, left(dbRuns.RaceTime,8), dbName.Startno, dbRuns.Status, dbRuns.Starttime as actualstarttime
+from dbName 
+inner join dbTeam on (dbTeam.raceId=3 and dbTeam.TeamID=dbName.TeamID)
+inner join dbclass on (dbClass.RaceId=3 and dbclass.classId=dbName.ClassID)
+left outer join dbRuns on (dbRuns.RaceID = 3 and dbRuns.StartNo = dbName.Startno)
+where dbName.raceId = 3 order by classname, status desc, RaceTime

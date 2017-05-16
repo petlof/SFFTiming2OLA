@@ -815,18 +815,26 @@ and dbclass.classid = dbName.classid", ssfId);
                 int idxChip = Array.IndexOf(header, "ID");
                 if (idxChip == -1)
                     idxChip = Array.IndexOf(header, "Emit");
+                if (idxChip == -1)
+                    idxChip = Array.IndexOf(header, "Number");
                 int idxClub = Array.IndexOf(header, "FED");
                 if (idxClub == -1)
                     idxClub = Array.IndexOf(header, "Country");
                 int idxLastName = Array.IndexOf(header, "Surname");
                 if (idxLastName == -1)
                     idxLastName = Array.IndexOf(header, "Last Name");
+                if (idxLastName == -1)
+                    idxLastName = Array.IndexOf(header, "LastName");
                 int idxFirstName = Array.IndexOf(header, "First name");
                 if (idxFirstName == -1)
                     idxFirstName = Array.IndexOf(header, "First Name");
+                if (idxFirstName == -1)
+                    idxFirstName = Array.IndexOf(header, "FirstName");
                 int idxBibNo = Array.IndexOf(header, "Chest No");
                 if (idxBibNo == -1)
                     idxBibNo = Array.IndexOf(header, "BibNo");
+                if (idxBibNo == -1)
+                    idxBibNo = Array.IndexOf(header, "Number");
                 int idxStartTime = Array.IndexOf(header, "Start Time");
                 if (idxStartTime == -1)
                     idxStartTime = Array.IndexOf(header, "Start");
@@ -834,6 +842,8 @@ and dbclass.classid = dbName.classid", ssfId);
                 int idxIofID = Array.IndexOf(header, "IOF-ID");
                 if (idxIofID == -1)
                     idxIofID = Array.IndexOf(header, "IOF ID");
+                if (idxIofID == -1)
+                    idxIofID = Array.IndexOf(header, "IOF_code");
 
                 FrmSelectClass importClass = new FrmSelectClass();
                 if (importClass.ShowDialog(this) == DialogResult.OK)
@@ -1340,6 +1350,12 @@ and rc.raceClassStatus <> 'notUsed' order by cast(r.bibNumber as unsigned)";
                      }
                  }
              }
+         }
+
+         private void setTimeToolStripMenuItem_Click(object sender, EventArgs e)
+         {
+             SetClockTime frm = new SetClockTime();
+             frm.ShowDialog();
          }
     }
 

@@ -48,6 +48,8 @@
             this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createREsultsFromOLAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assignCardstorelayPersonsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmbRace = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -150,7 +152,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.startlistsToolStripMenuItem});
+            this.startlistsToolStripMenuItem,
+            this.clockToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(750, 24);
@@ -225,6 +228,21 @@
             this.assignCardstorelayPersonsToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
             this.assignCardstorelayPersonsToolStripMenuItem.Text = "Assign cardstorelayPersons";
             this.assignCardstorelayPersonsToolStripMenuItem.Click += new System.EventHandler(this.assignCardstorelayPersonsToolStripMenuItem_Click);
+            // 
+            // clockToolStripMenuItem
+            // 
+            this.clockToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.setTimeToolStripMenuItem});
+            this.clockToolStripMenuItem.Name = "clockToolStripMenuItem";
+            this.clockToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
+            this.clockToolStripMenuItem.Text = "ECU/ETS/EST";
+            // 
+            // setTimeToolStripMenuItem
+            // 
+            this.setTimeToolStripMenuItem.Name = "setTimeToolStripMenuItem";
+            this.setTimeToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.setTimeToolStripMenuItem.Text = "Set Time/Code";
+            this.setTimeToolStripMenuItem.Click += new System.EventHandler(this.setTimeToolStripMenuItem_Click);
             // 
             // cmbRace
             // 
@@ -308,6 +326,8 @@
         private System.Windows.Forms.ToolStripMenuItem createREsultsFromOLAToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assignCardstorelayPersonsToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.ToolStripMenuItem clockToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setTimeToolStripMenuItem;
     }
 }
 
