@@ -1,16 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FD09A562-6C20-46D6-9C18-BC8B45592D22}</ProjectGuid>
+    <ProjectGuid>{2638B843-203A-4EA2-BD38-6F96D8AD43E6}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SSFTimingOlaSync</RootNamespace>
-    <AssemblyName>SSFTimingOlaSync</AssemblyName>
+    <RootNamespace>EMITController</RootNamespace>
+    <AssemblyName>EMITController</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,42 +34,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data">
-      <HintPath>..\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FrmSelectClass.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmSelectClass.Designer.cs">
-      <DependentUpon>FrmSelectClass.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SSFTimingSync.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SSFTimingSync.Designer.cs">
-      <DependentUpon>SSFTimingSync.cs</DependentUpon>
-    </Compile>
+    <Compile Include="AtomicTime.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FrmSelectClass.resx">
-      <DependentUpon>FrmSelectClass.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SSFTimingSync.resx">
-      <DependentUpon>SSFTimingSync.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="SerialPortUtilities.cs" />
+    <Compile Include="SetClockTime.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SetClockTime.Designer.cs">
+      <DependentUpon>SetClockTime.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -76,8 +66,11 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="App.config" />
+    <EmbeddedResource Include="SetClockTime.resx">
+      <DependentUpon>SetClockTime.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -89,13 +82,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SSFResults.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EMITController\EMITController.csproj">
-      <Project>{2638b843-203a-4ea2-bd38-6f96d8ad43e6}</Project>
-      <Name>EMITController</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

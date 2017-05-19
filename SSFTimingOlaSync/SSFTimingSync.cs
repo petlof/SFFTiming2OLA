@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.IO;
 using System.Xml;
+using EMITController;
 
 namespace SSFTimingOlaSync
 {
