@@ -159,19 +159,19 @@ namespace EMITController
             DateTime setTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour,
                 currentTime.Minute, currentTime.Second);
             setTime = setTime.AddMinutes(offsetMinutes).AddSeconds(1);
-            string msg = "SC" + setTime.ToString("HH:mm:ss");
+            string msg = "/SC" + setTime.ToString("HH:mm:ss") + "\r\n";
             List<byte> bytes = new List<byte>();
-            bytes.Add(0x2F);
+            //bytes.Add(0x2F);
             bytes.AddRange(System.Text.Encoding.ASCII.GetBytes(msg));
-            bytes.Add(0x0D);
-            bytes.Add(0x0A);
+            //bytes.Add(0x0D);
+            //bytes.Add(0x0A);
             byte[] bArr = bytes.ToArray();
             //Send message so that last byte (including / and CR LF) is received at next whole second.
             //int waitMs = 1000 - _refTime.AddTicks(_sw.ElapsedTicks).Millisecond;//- 5 * bArr.Length;
             //Thread.Sleep(waitMs);
 
             DateTime setTimeAtSec = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour,
-                currentTime.Minute, currentTime.Second).AddSeconds(1).AddMilliseconds(-5 * bytes.Count).AddMilliseconds(-200);//.AddMilliseconds(500);
+                currentTime.Minute, currentTime.Second).AddSeconds(1).AddMilliseconds(-5 * bytes.Count).AddMilliseconds(200);//.AddMilliseconds(500);
 
             while (_refTime + _sw.Elapsed < setTimeAtSec)
             {
@@ -185,21 +185,22 @@ namespace EMITController
         private void sendmsg(byte[] bytes)
         {
             var sw = new Stopwatch();
-                sw.Start();
-                foreach (var b in bytes)
-                {
-                    sp.BaseStream.WriteByte(b);
-                    long el = sw.ElapsedMilliseconds;
-                    while (sw.ElapsedMilliseconds < el + 5)
-                    {
-                        
-                    }
-                }
+            sw.Start();
+            foreach (var b in bytes)
+            {
+                sp.BaseStream.WriteByte(b);
                 sp.BaseStream.Flush();
-                sw.Stop();
+                long el = sw.ElapsedMilliseconds;
+                while (sw.ElapsedMilliseconds < el + 5)
+                {
+
+                }
+            }
+            sp.BaseStream.Flush();
+            sw.Stop();
         }
 
-       
+
 
         private void button9_Click(object sender, EventArgs e)
         {

@@ -1,3 +1,8 @@
 /SSFTimingOlaSync/bin/Debug
 /SSFTimingOlaSync/obj/Debug
 /*.suo
+/EMITController/bin/Debug
+/EMITController/obj/Debug
+/.vs/SSFTimingOlaSync/v14/*.suo
+/PortMapper/bin/Debug
+/PortMapper/obj/Debug
