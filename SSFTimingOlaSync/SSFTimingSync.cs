@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
 using EMITController;
 
 namespace SSFTimingOlaSync
@@ -25,31 +26,38 @@ namespace SSFTimingOlaSync
         public SSFTimingSync()
         {
             InitializeComponent();
-
-            m_sffTimingConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["ssftiming"].ConnectionString);
-            logit("connecting to sfftiming: " + ConfigurationManager.ConnectionStrings["ssftiming"].ConnectionString);
-            m_sffTimingConnection.Open();
-
-            using (IDbCommand cmd = m_sffTimingConnection.CreateCommand())
+            if (!string.IsNullOrEmpty(ConfigurationManager.ConnectionStrings["ssftiming"].ConnectionString))
             {
-                cmd.CommandText = "select raceId, RaceName, raceDate from dbRaces";
-                cmbSSF.Items.Clear();
+                m_sffTimingConnection =
+                    new SqlConnection(ConfigurationManager.ConnectionStrings["ssftiming"].ConnectionString);
+                logit("connecting to sfftiming: " +
+                      ConfigurationManager.ConnectionStrings["ssftiming"].ConnectionString);
+                m_sffTimingConnection.Open();
 
-                IDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                using (IDbCommand cmd = m_sffTimingConnection.CreateCommand())
                 {
-                    var cmp = new ListComp();
-                    cmp.Id = Convert.ToInt32(reader["raceId"].ToString());
-                    cmp.Name = Convert.ToString(reader["raceName"]) + " [" + Convert.ToDateTime(reader["raceDate"]).ToString("yyyy-MM-dd") + "]";
-                    cmbSSF.Items.Add(cmp);
+                    cmd.CommandText = "select raceId, RaceName, raceDate from dbRaces";
+                    cmbSSF.Items.Clear();
+
+                    IDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var cmp = new ListComp();
+                        cmp.Id = Convert.ToInt32(reader["raceId"].ToString());
+                        cmp.Name = Convert.ToString(reader["raceName"]) + " [" +
+                                   Convert.ToDateTime(reader["raceDate"]).ToString("yyyy-MM-dd") + "]";
+                        cmbSSF.Items.Add(cmp);
+                    }
+
+                    if (cmbSSF.Items.Count > 0)
+                        cmbSSF.SelectedIndex = 0;
+                    reader.Close();
+                    cmd.Dispose();
                 }
-                if (cmbSSF.Items.Count > 0)
-                    cmbSSF.SelectedIndex = 0;
-                reader.Close();
-                cmd.Dispose();
+
+                logit("connected");
             }
 
-            logit("connected");
             m_olaConnection = new MySqlConnection(ConfigurationManager.ConnectionStrings["ola"].ConnectionString);
             logit("connecting to ola: " + ConfigurationManager.ConnectionStrings["ola"].ConnectionString);
             m_olaConnection.Open();
@@ -385,7 +393,7 @@ and dbclass.classid = dbName.classid", ssfId);
                         if (reader["starttime"] != null && reader["starttime"] != DBNull.Value)
                         {
                             startTime = ParseDateTime(reader["starttime"].ToString());
-                            startTime = startTime.AddMilliseconds(-1 * startTime.Millisecond);
+                           // startTime = startTime.AddMilliseconds(-1 * startTime.Millisecond);
                         }
 
                         if (reader["finishTime"] != null && reader["finishTime"] != DBNull.Value)
@@ -397,6 +405,7 @@ and dbclass.classid = dbName.classid", ssfId);
                         if (reader["RaceTime"] != null && reader["RaceTime"] != DBNull.Value)
                         {
                             time = GetSSFRunTime(reader["RaceTime"].ToString());
+                            //Avrunda till hela sekunder
                             time = ((int)(time / 100d)) * 100;
                         }
 
@@ -813,38 +822,73 @@ and dbclass.classid = dbName.classid", ssfId);
                 string[] header = lines[0].Split(new string[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
                 lines = lines.Skip(1).ToArray();
 
-                int idxChip = Array.IndexOf(header, "ID");
+                int idxChip = Array.IndexOf(header, "eID");
                 if (idxChip == -1)
                     idxChip = Array.IndexOf(header, "Emit");
+                if (idxChip == -1)
+                    idxChip = Array.IndexOf(header, "EMIT");
+                if (idxChip == -1)
+                    idxChip = Array.IndexOf(header, "Emit 1");
+                if (idxChip == -1)
+                    idxChip = Array.IndexOf(header, "emitag");
                 if (idxChip == -1)
                     idxChip = Array.IndexOf(header, "Number");
                 int idxClub = Array.IndexOf(header, "FED");
                 if (idxClub == -1)
                     idxClub = Array.IndexOf(header, "Country");
+                if (idxClub == -1)
+                    idxClub = Array.IndexOf(header, "Club");
+                if (idxClub == -1)
+                    idxClub = Array.IndexOf(header, "club");
+                if (idxClub == -1)
+                    idxClub = Array.IndexOf(header, "Klubb");
                 int idxLastName = Array.IndexOf(header, "Surname");
                 if (idxLastName == -1)
                     idxLastName = Array.IndexOf(header, "Last Name");
                 if (idxLastName == -1)
                     idxLastName = Array.IndexOf(header, "LastName");
+                if (idxLastName == -1)
+                    idxLastName = Array.IndexOf(header, "lastname");
+                if (idxLastName == -1)
+                    idxLastName = Array.IndexOf(header, "Efternamn");
                 int idxFirstName = Array.IndexOf(header, "First name");
                 if (idxFirstName == -1)
                     idxFirstName = Array.IndexOf(header, "First Name");
                 if (idxFirstName == -1)
                     idxFirstName = Array.IndexOf(header, "FirstName");
+                if (idxFirstName == -1)
+                    idxFirstName = Array.IndexOf(header, "firstname");
+                if (idxFirstName == -1)
+                    idxFirstName = Array.IndexOf(header, "Förnamn");
                 int idxBibNo = Array.IndexOf(header, "Chest No");
                 if (idxBibNo == -1)
                     idxBibNo = Array.IndexOf(header, "BibNo");
+                if (idxBibNo == -1)
+                    idxBibNo = Array.IndexOf(header, "BIB");
+                if (idxBibNo == -1)
+                    idxBibNo = Array.IndexOf(header, "Bib");
                 if (idxBibNo == -1)
                     idxBibNo = Array.IndexOf(header, "Number");
                 int idxStartTime = Array.IndexOf(header, "Start Time");
                 if (idxStartTime == -1)
                     idxStartTime = Array.IndexOf(header, "Start");
+                if (idxStartTime == -1)
+                    idxStartTime = Array.IndexOf(header, "Starttime");
+                if (idxStartTime == -1)
+                    idxStartTime = Array.IndexOf(header, "Start time");
                 int idxHeat = Array.IndexOf(header, "Heat");
                 int idxIofID = Array.IndexOf(header, "IOF-ID");
                 if (idxIofID == -1)
                     idxIofID = Array.IndexOf(header, "IOF ID");
                 if (idxIofID == -1)
+                    idxIofID = Array.IndexOf(header, "iofid");
+                if (idxIofID == -1)
                     idxIofID = Array.IndexOf(header, "IOF_code");
+                if (idxIofID == -1)
+                    idxIofID = Array.IndexOf(header, "ID");
+                if (idxIofID == -1)
+                    idxIofID = Array.IndexOf(header, "Id");
+
 
                 FrmSelectClass importClass = new FrmSelectClass();
                 if (importClass.ShowDialog(this) == DialogResult.OK)
@@ -852,14 +896,15 @@ and dbclass.classid = dbName.classid", ssfId);
                     List<Runner> runners = new List<Runner>();
                     foreach (var line in lines)
                     {
-                        string[] parts = line.Split(new string[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
-                        int chip = int.Parse(parts[idxChip]);
+                        string[] parts = line.Split(new string[] {  ";" }, StringSplitOptions.None);
+                        int chip = string.IsNullOrEmpty(parts[idxChip]) ? -1 : int.Parse(parts[idxChip]);
                         string club = parts[idxClub];
                         string firstName = parts[idxFirstName];
                         string lastName = parts[idxLastName];
-                        int bibNo = int.Parse(parts[idxBibNo]);
+                        int bibNo = string.IsNullOrEmpty(parts[idxBibNo]) ? 0 : int.Parse(parts[idxBibNo]);
                         string startTime = parts[idxStartTime];
-                        int id = Convert.ToInt32(parts[idxIofID]);
+
+                        int id = idxIofID >= 0 ? Convert.ToInt32(parts[idxIofID]) : -1;
 
                         EventClass eclass = importClass.Class;
                         if (importClass.EventWithHeats)
@@ -898,7 +943,7 @@ and dbclass.classid = dbName.classid", ssfId);
                         xtw.WriteAttributeString("version", "2.0.3");
                         xtw.WriteEndElement();
 
-                        int clubId = ofd.FileName.Contains("Men") ? 2000001 : 1000001 ;
+                        int clubId = importClass.Class.Name.ToLower().StartsWith("m") ? 2000001 : 1000001 ;
                         foreach (var club in runners.GroupBy(x => x.Club))
                         {
                             xtw.WriteStartElement("ClubEntry");
@@ -924,7 +969,7 @@ and dbclass.classid = dbName.classid", ssfId);
                                 xtw.WriteValue(entry.FirstName);
                                 xtw.WriteEndElement();*/
                                 xtw.WriteStartElement("PersonName");
-                                xtw.WriteElementString("Family", entry.LastName);
+                                xtw.WriteElementString("Family", string.IsNullOrEmpty(entry.LastName) ? "-" : entry.LastName);
 
                                 xtw.WriteStartElement("Given");
                                 xtw.WriteAttributeString("sequence", 1.ToString());
@@ -933,20 +978,25 @@ and dbclass.classid = dbName.classid", ssfId);
 
                                 xtw.WriteEndElement();
 
-                                xtw.WriteStartElement("PersonId");
-                                xtw.WriteAttributeString("idManager", "IOF");
-                                xtw.WriteAttributeString("type", "int");
-                                xtw.WriteValue(entry.EntryId.ToString());
-                                xtw.WriteEndElement();
+                                if (entry.EntryId >= 0)
+                                {
+                                    xtw.WriteStartElement("PersonId");
+                                    xtw.WriteAttributeString("idManager", "IOF");
+                                    xtw.WriteAttributeString("type", "int");
+                                    xtw.WriteValue(entry.EntryId.ToString());
+                                    xtw.WriteEndElement();
+                                }
 
                                 xtw.WriteEndElement();
-
-                                xtw.WriteStartElement("CCard");
-                                xtw.WriteElementString("CCardId", entry.CardNo.ToString());
-                                xtw.WriteStartElement("PunchingUnitType");
-                                xtw.WriteAttributeString("value", "Emit");
-                                xtw.WriteEndElement();
-                                xtw.WriteEndElement();
+                                if (entry.CardNo >= 0)
+                                {
+                                    xtw.WriteStartElement("CCard");
+                                    xtw.WriteElementString("CCardId", entry.CardNo.ToString());
+                                    xtw.WriteStartElement("PunchingUnitType");
+                                    xtw.WriteAttributeString("value", "Emit");
+                                    xtw.WriteEndElement();
+                                    xtw.WriteEndElement();
+                                }
 
 
 
@@ -980,7 +1030,7 @@ and dbclass.classid = dbName.classid", ssfId);
                             foreach (var runner in runners)
                             {
                                 var startTime = importClass.StartDate.ToShortDateString() + " " + runner.StartTime;
-                                cmd.CommandText = "update results set bibNumber=" + runner.BibNumber + ", allocatedStartTime='" + startTime + "', startTime = '" + startTime + "' where entryid = (select entryId from entries where externalId = " + runner.CardNo + ")";
+                                cmd.CommandText = "update results set bibNumber=" + (runner.BibNumber > 0 ? runner.BibNumber.ToString() : "NULL") + ", allocatedStartTime='" + startTime + "', startTime = '" + startTime + "' where entryid = (select entryId from entries where externalId = " + runner.CardNo + ")";
                                 cmd.ExecuteNonQuery();
                             }
                         }
@@ -1013,7 +1063,7 @@ and dbclass.classid = dbName.classid", ssfId);
                             pi.personId = p.personId and
                             ec.eventClassId=rc.eventClassId and
                             epc.cardId = r.electronicPunchingCardId and p.personId = e.competitorId 
-                            and e.entryId = r.entryId and rc.eventRaceId=1 
+                            and e.entryId = r.entryId and rc.eventRaceId=2
                             and p.defaultOrganisationId=o.organisationId and rc.raceClassStatus <> 'notUsed' order by bibNumber";
                             cmd.CommandText = sql;
 
@@ -1211,6 +1261,7 @@ p.firstName as firstName1,p.familyName as familyName1,epc.cardNumber as card1,
 (select externalId from personIds where personId = (select relayPersonId from results r2, raceClasses rc2 where rc2.raceClassId=r2.raceClassId and r2.entryId = r.entryId and rc2.relayLeg=4)) as Fiscode4
 
 
+
 from entries e, results r, raceClasses rc, eventclasses ec, electronicPunchingCards epc,
  persons p 
 where e.entryId=r.entryId and r.raceClassId=rc.raceClassId and ec.eventClassId=rc.eventClassId 
@@ -1235,13 +1286,13 @@ and rc.raceClassStatus <> 'notUsed' order by cast(r.bibNumber as unsigned)";
                                              reader["firstName2"] as string + ";" +
                                              reader["familyName2"] as string + ";" +
                                              reader["card2"].ToString() + ";" +
-                                             (Convert.ToInt32(reader["card2"]) + 1000) + ";" +
+                                             (string.IsNullOrEmpty(reader["card2"].ToString()) ? "" : (Convert.ToInt32(reader["card2"]) + 1000).ToString()) + ";" +
                                              reader["Fiscode2"] as string + ";;" +
 
                                              reader["firstName3"] as string + ";" +
                                              reader["familyName3"] as string + ";" +
                                              reader["card3"].ToString() + ";" +
-                                             (Convert.ToInt32(reader["card3"]) + 1000) + ";" +
+                                             (string.IsNullOrEmpty(reader["card3"].ToString()) ? "": (Convert.ToInt32(reader["card3"]) + 1000).ToString()) + ";" +
                                              reader["Fiscode3"] as string + ";;" 
                                              
                                             /* +
@@ -1265,13 +1316,13 @@ and rc.raceClassStatus <> 'notUsed' order by cast(r.bibNumber as unsigned)";
                                          sw2.WriteLine(reader["firstName2"] as string + ";" +
                                              reader["familyName2"] as string + ";" +
                                              reader["card2"].ToString() + ";" +
-                                             (Convert.ToInt32(reader["card2"]) + 1000) + ";" +
+                                             (string.IsNullOrEmpty(reader["card2"].ToString()) ? "" : (Convert.ToInt32(reader["card2"]) + 1000).ToString()) + ";" +
                                              reader["Fiscode2"] as string);
 
                                          sw2.WriteLine(reader["firstName3"] as string + ";" +
                                         reader["familyName3"] as string + ";" +
                                         reader["card3"].ToString() + ";" +
-                                        (Convert.ToInt32(reader["card3"]) + 1000) + ";" +
+                                        (string.IsNullOrEmpty(reader["card3"].ToString()) ? "" : (Convert.ToInt32(reader["card3"]) + 1000).ToString()) + ";" +
                                         reader["Fiscode3"] as string);
 
                                         /* sw2.WriteLine(reader["firstName4"] as string + ";" +
@@ -1306,12 +1357,18 @@ and rc.raceClassStatus <> 'notUsed' order by cast(r.bibNumber as unsigned)";
                  {
                      string[] header = sr.ReadLine().Split(';');
                      int idxIofId = Array.IndexOf(header, "IOF ID");
-                     int idxTag = Array.IndexOf(header, "emiTag");
-                     string tmp;
+                     int idxTag = Array.IndexOf(header, "emitag");
+                    if (idxTag == -1)
+                        idxTag = Array.IndexOf(header, "emiTag1");
+                    string tmp;
                      while ((tmp = sr.ReadLine()) != null)
                      {
                          string[] parts = tmp.Split(';');
+                        if (string.IsNullOrEmpty(parts[0]))
+                            continue;
                          int iofId = Convert.ToInt32(parts[idxIofId]);
+                        if (iofId == 0)
+                            continue;
                          int tag = Convert.ToInt32(parts[idxTag]);
                          tags.Add(iofId, tag);
                      }
@@ -1358,6 +1415,41 @@ and rc.raceClassStatus <> 'notUsed' order by cast(r.bibNumber as unsigned)";
              SetClockTime frm = new SetClockTime();
              frm.ShowDialog();
          }
+
+        private void iOFXMLCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog odf = new OpenFileDialog();
+            if (odf.ShowDialog(this) == DialogResult.OK)
+            {
+                XNamespace ns = "http://www.orienteering.org/datastandard/3.0";
+
+                XDocument totaldoc = XDocument.Load(odf.FileName);
+                //Dictionary<string, XElement> totalResultPerResultId = new Dictionary<string, XElement>();
+                List<string> lines = new List<string>();
+                lines.Add("entryid;iofid;firstname;lastname;club;classname");
+                foreach (var personentry in totaldoc.Descendants(ns + "PersonEntry"))
+                {
+                    int entryId = Convert.ToInt32(personentry.Descendants(ns + "Id").FirstOrDefault().Value);
+                    int personId = Convert.ToInt32(personentry.Descendants(ns + "Person").FirstOrDefault().Descendants(ns+"Id").FirstOrDefault().Value);
+                    string firstName = personentry.Descendants(ns + "Person").FirstOrDefault().Descendants(ns + "Name")
+                        .FirstOrDefault().Descendants(ns + "Given").FirstOrDefault().Value;
+                    string lastName = personentry.Descendants(ns + "Person").FirstOrDefault().Descendants(ns + "Name")
+                        .FirstOrDefault().Descendants(ns + "Family").FirstOrDefault().Value;
+
+                    string className = personentry.Descendants(ns + "Class").FirstOrDefault().Descendants(ns + "Name").FirstOrDefault().Value;
+                    if (className == "Media" || className == "IOF Officials" || className == "Team Officials")
+                        continue;
+                    string club = personentry.Descendants(ns + "Organisation").FirstOrDefault().Descendants(ns + "Country").FirstOrDefault().Attribute("code").Value;
+                    
+
+                    lines.Add(
+                        entryId + ";" + personId + ";" + firstName + ";" + lastName + ";" + club + ";" + className);
+
+                }
+
+                Clipboard.SetText(string.Join("\n", lines.ToArray()));
+            }
+        }
     }
 
     class Runner

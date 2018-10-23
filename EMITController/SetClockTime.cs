@@ -26,6 +26,8 @@ namespace EMITController
             this.Shown += SetClockTime_Shown;
             comboBox1.DataSource = SerialPortUtilities.GetSerialPorts(); //SerialPort.GetPortNames();
             comboBox1.DisplayMember = "Name";
+
+            comboBox2.DataSource = new int[] { 4800, 9600, 19200, 115200 };
         }
 
         private void SetClockTime_Shown(object sender, EventArgs e)
@@ -53,7 +55,7 @@ namespace EMITController
             }
             else
             {
-                sp = new SerialPort((comboBox1.SelectedItem as SerialPortUtilities.COMPortInfo).PortName, 115200);
+                sp = new SerialPort((comboBox1.SelectedItem as SerialPortUtilities.COMPortInfo).PortName, (int)comboBox2.SelectedItem);
                 sp.WriteBufferSize = 10;
                 sp.ReceivedBytesThreshold = 1;
                 sp.DataReceived += serialDataReceived;
@@ -162,6 +164,7 @@ namespace EMITController
             string msg = "/SC" + setTime.ToString("HH:mm:ss") + "\r\n";
             List<byte> bytes = new List<byte>();
             //bytes.Add(0x2F);
+
             bytes.AddRange(System.Text.Encoding.ASCII.GetBytes(msg));
             //bytes.Add(0x0D);
             //bytes.Add(0x0A);
@@ -171,7 +174,7 @@ namespace EMITController
             //Thread.Sleep(waitMs);
 
             DateTime setTimeAtSec = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour,
-                currentTime.Minute, currentTime.Second).AddSeconds(1).AddMilliseconds(-5 * bytes.Count).AddMilliseconds(200);//.AddMilliseconds(500);
+                currentTime.Minute, currentTime.Second).AddSeconds(1).AddMilliseconds(-5 * bytes.Count).AddMilliseconds(-100);//.AddMilliseconds(500);
 
             while (_refTime + _sw.Elapsed < setTimeAtSec)
             {
@@ -204,7 +207,9 @@ namespace EMITController
 
         private void button9_Click(object sender, EventArgs e)
         {
-            comboBox1.DataSource = SerialPort.GetPortNames();
+            
+            comboBox1.DataSource = SerialPortUtilities.GetSerialPorts(); //SerialPort.GetPortNames();
+            comboBox1.DisplayMember = "Name";
         }
 
         private void button10_Click(object sender, EventArgs e)

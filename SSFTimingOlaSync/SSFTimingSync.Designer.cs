@@ -53,15 +53,17 @@
             this.cmbRace = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.iOFXMLCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 24);
+            this.label1.Location = new System.Drawing.Point(16, 30);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 13);
+            this.label1.Size = new System.Drawing.Size(117, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "SSFTiming-Event";
             // 
@@ -69,17 +71,19 @@
             // 
             this.cmbSSF.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSSF.FormattingEnabled = true;
-            this.cmbSSF.Location = new System.Drawing.Point(15, 40);
+            this.cmbSSF.Location = new System.Drawing.Point(20, 49);
+            this.cmbSSF.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cmbSSF.Name = "cmbSSF";
-            this.cmbSSF.Size = new System.Drawing.Size(288, 21);
+            this.cmbSSF.Size = new System.Drawing.Size(383, 24);
             this.cmbSSF.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 64);
+            this.label2.Location = new System.Drawing.Point(16, 79);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(59, 13);
+            this.label2.Size = new System.Drawing.Size(77, 17);
             this.label2.TabIndex = 2;
             this.label2.Text = "OLA-Event";
             // 
@@ -87,17 +91,19 @@
             // 
             this.cmbOLA.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbOLA.FormattingEnabled = true;
-            this.cmbOLA.Location = new System.Drawing.Point(15, 80);
+            this.cmbOLA.Location = new System.Drawing.Point(20, 98);
+            this.cmbOLA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cmbOLA.Name = "cmbOLA";
-            this.cmbOLA.Size = new System.Drawing.Size(288, 21);
+            this.cmbOLA.Size = new System.Drawing.Size(383, 24);
             this.cmbOLA.TabIndex = 3;
             this.cmbOLA.SelectedIndexChanged += new System.EventHandler(this.cmbOLA_SelectedIndexChanged);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(15, 147);
+            this.button1.Location = new System.Drawing.Point(20, 181);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(100, 28);
             this.button1.TabIndex = 4;
             this.button1.Text = "Start";
             this.button1.UseVisualStyleBackColor = true;
@@ -105,9 +111,10 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(96, 147);
+            this.button2.Location = new System.Drawing.Point(128, 181);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(100, 28);
             this.button2.TabIndex = 5;
             this.button2.Text = "Stop";
             this.button2.UseVisualStyleBackColor = true;
@@ -116,9 +123,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(318, 24);
+            this.label3.Location = new System.Drawing.Point(424, 30);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(25, 13);
+            this.label3.Size = new System.Drawing.Size(32, 17);
             this.label3.TabIndex = 6;
             this.label3.Text = "Log";
             // 
@@ -128,9 +136,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(321, 40);
+            this.listBox1.ItemHeight = 16;
+            this.listBox1.Location = new System.Drawing.Point(428, 49);
+            this.listBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(417, 225);
+            this.listBox1.Size = new System.Drawing.Size(555, 276);
             this.listBox1.TabIndex = 7;
             // 
             // backgroundWorker1
@@ -141,22 +151,25 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(15, 176);
+            this.checkBox1.Location = new System.Drawing.Point(20, 217);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(93, 17);
+            this.checkBox1.Size = new System.Drawing.Size(121, 21);
             this.checkBox1.TabIndex = 8;
             this.checkBox1.Text = "Use starttime2";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.startlistsToolStripMenuItem,
             this.clockToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(750, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1000, 28);
             this.menuStrip1.TabIndex = 9;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -165,13 +178,13 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.exitToolStripMenuItem.Text = "&Exit";
             // 
             // startlistsToolStripMenuItem
@@ -181,9 +194,10 @@
             this.createSSFTimingStartlistFromOLAToolStripMenuItem,
             this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem,
             this.createREsultsFromOLAToolStripMenuItem,
-            this.assignCardstorelayPersonsToolStripMenuItem});
+            this.assignCardstorelayPersonsToolStripMenuItem,
+            this.iOFXMLCSVToolStripMenuItem});
             this.startlistsToolStripMenuItem.Name = "startlistsToolStripMenuItem";
-            this.startlistsToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
+            this.startlistsToolStripMenuItem.Size = new System.Drawing.Size(77, 24);
             this.startlistsToolStripMenuItem.Text = "&Startlists";
             // 
             // importStartlistToOLAToolStripMenuItem
@@ -191,41 +205,41 @@
             this.importStartlistToOLAToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createXMLimportFileToolStripMenuItem});
             this.importStartlistToOLAToolStripMenuItem.Name = "importStartlistToOLAToolStripMenuItem";
-            this.importStartlistToOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.importStartlistToOLAToolStripMenuItem.Size = new System.Drawing.Size(352, 26);
             this.importStartlistToOLAToolStripMenuItem.Text = "IOF 2 OLA";
             // 
             // createXMLimportFileToolStripMenuItem
             // 
             this.createXMLimportFileToolStripMenuItem.Name = "createXMLimportFileToolStripMenuItem";
-            this.createXMLimportFileToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.createXMLimportFileToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
             this.createXMLimportFileToolStripMenuItem.Text = "Create XML-import file";
             this.createXMLimportFileToolStripMenuItem.Click += new System.EventHandler(this.createXMLimportFileToolStripMenuItem_Click);
             // 
             // createSSFTimingStartlistFromOLAToolStripMenuItem
             // 
             this.createSSFTimingStartlistFromOLAToolStripMenuItem.Name = "createSSFTimingStartlistFromOLAToolStripMenuItem";
-            this.createSSFTimingStartlistFromOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.createSSFTimingStartlistFromOLAToolStripMenuItem.Size = new System.Drawing.Size(352, 26);
             this.createSSFTimingStartlistFromOLAToolStripMenuItem.Text = "Create SSFTiming startlist from OLA";
             this.createSSFTimingStartlistFromOLAToolStripMenuItem.Click += new System.EventHandler(this.createSSFTimingStartlistFromOLAToolStripMenuItem_Click);
             // 
             // createSSFTimingRelaystartlistFromOLAToolStripMenuItem
             // 
             this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Name = "createSSFTimingRelaystartlistFromOLAToolStripMenuItem";
-            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Size = new System.Drawing.Size(352, 26);
             this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Text = "Create SSFTiming relaystartlist from OLA";
             this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem.Click += new System.EventHandler(this.createSSFTimingRelaystartlistFromOLAToolStripMenuItem_Click);
             // 
             // createREsultsFromOLAToolStripMenuItem
             // 
             this.createREsultsFromOLAToolStripMenuItem.Name = "createREsultsFromOLAToolStripMenuItem";
-            this.createREsultsFromOLAToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.createREsultsFromOLAToolStripMenuItem.Size = new System.Drawing.Size(352, 26);
             this.createREsultsFromOLAToolStripMenuItem.Text = "Create REsultsFromOLA";
             this.createREsultsFromOLAToolStripMenuItem.Click += new System.EventHandler(this.createREsultsFromOLAToolStripMenuItem_Click);
             // 
             // assignCardstorelayPersonsToolStripMenuItem
             // 
             this.assignCardstorelayPersonsToolStripMenuItem.Name = "assignCardstorelayPersonsToolStripMenuItem";
-            this.assignCardstorelayPersonsToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.assignCardstorelayPersonsToolStripMenuItem.Size = new System.Drawing.Size(352, 26);
             this.assignCardstorelayPersonsToolStripMenuItem.Text = "Assign cardstorelayPersons";
             this.assignCardstorelayPersonsToolStripMenuItem.Click += new System.EventHandler(this.assignCardstorelayPersonsToolStripMenuItem_Click);
             // 
@@ -234,13 +248,13 @@
             this.clockToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setTimeToolStripMenuItem});
             this.clockToolStripMenuItem.Name = "clockToolStripMenuItem";
-            this.clockToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
+            this.clockToolStripMenuItem.Size = new System.Drawing.Size(108, 24);
             this.clockToolStripMenuItem.Text = "ECU/ETS/EST";
             // 
             // setTimeToolStripMenuItem
             // 
             this.setTimeToolStripMenuItem.Name = "setTimeToolStripMenuItem";
-            this.setTimeToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.setTimeToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
             this.setTimeToolStripMenuItem.Text = "Set Time/Code";
             this.setTimeToolStripMenuItem.Click += new System.EventHandler(this.setTimeToolStripMenuItem_Click);
             // 
@@ -248,35 +262,45 @@
             // 
             this.cmbRace.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRace.FormattingEnabled = true;
-            this.cmbRace.Location = new System.Drawing.Point(15, 120);
+            this.cmbRace.Location = new System.Drawing.Point(20, 148);
+            this.cmbRace.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cmbRace.Name = "cmbRace";
-            this.cmbRace.Size = new System.Drawing.Size(288, 21);
+            this.cmbRace.Size = new System.Drawing.Size(383, 24);
             this.cmbRace.TabIndex = 11;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 104);
+            this.label4.Location = new System.Drawing.Point(16, 128);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.Size = new System.Drawing.Size(74, 17);
             this.label4.TabIndex = 10;
             this.label4.Text = "OLA-Race";
             // 
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(15, 199);
+            this.checkBox2.Location = new System.Drawing.Point(20, 245);
+            this.checkBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(64, 17);
+            this.checkBox2.Size = new System.Drawing.Size(80, 21);
             this.checkBox2.TabIndex = 12;
             this.checkBox2.Text = "Is Relay";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
+            // iOFXMLCSVToolStripMenuItem
+            // 
+            this.iOFXMLCSVToolStripMenuItem.Name = "iOFXMLCSVToolStripMenuItem";
+            this.iOFXMLCSVToolStripMenuItem.Size = new System.Drawing.Size(352, 26);
+            this.iOFXMLCSVToolStripMenuItem.Text = "IOF-XML->CSV";
+            this.iOFXMLCSVToolStripMenuItem.Click += new System.EventHandler(this.iOFXMLCSVToolStripMenuItem_Click);
+            // 
             // SSFTimingSync
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(750, 262);
+            this.ClientSize = new System.Drawing.Size(1000, 322);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.cmbRace);
             this.Controls.Add(this.label4);
@@ -291,6 +315,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "SSFTimingSync";
             this.Text = "SSFTimingSync";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SSFTimingSync_FormClosing);
@@ -328,6 +353,7 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.ToolStripMenuItem clockToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setTimeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem iOFXMLCSVToolStripMenuItem;
     }
 }
 
