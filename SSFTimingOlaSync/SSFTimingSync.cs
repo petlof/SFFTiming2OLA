@@ -842,6 +842,8 @@ and dbclass.classid = dbName.classid", ssfId);
                     idxClub = Array.IndexOf(header, "club");
                 if (idxClub == -1)
                     idxClub = Array.IndexOf(header, "Klubb");
+                if (idxClub == -1)
+                    idxClub = Array.IndexOf(header, "Fed");
                 int idxLastName = Array.IndexOf(header, "Surname");
                 if (idxLastName == -1)
                     idxLastName = Array.IndexOf(header, "Last Name");
@@ -867,6 +869,8 @@ and dbclass.classid = dbName.classid", ssfId);
                     idxBibNo = Array.IndexOf(header, "BIB");
                 if (idxBibNo == -1)
                     idxBibNo = Array.IndexOf(header, "Bib");
+                if (idxBibNo == -1)
+                    idxBibNo = Array.IndexOf(header, "Bib number");
                 if (idxBibNo == -1)
                     idxBibNo = Array.IndexOf(header, "Number");
                 int idxStartTime = Array.IndexOf(header, "Start Time");
@@ -1063,7 +1067,7 @@ and dbclass.classid = dbName.classid", ssfId);
                             pi.personId = p.personId and
                             ec.eventClassId=rc.eventClassId and
                             epc.cardId = r.electronicPunchingCardId and p.personId = e.competitorId 
-                            and e.entryId = r.entryId and rc.eventRaceId=2
+                            and e.entryId = r.entryId and rc.eventRaceId=1
                             and p.defaultOrganisationId=o.organisationId and rc.raceClassStatus <> 'notUsed' order by bibNumber";
                             cmd.CommandText = sql;
 
@@ -1078,7 +1082,7 @@ and dbclass.classid = dbName.classid", ssfId);
                                         reader["bibNumber"] as string + ";" +
                                         reader["startTime"] as string + ";;" +
                                         reader["cardNumber"].ToString() + ";" +
-                                        (Convert.ToInt32(reader["cardNumber"]) + 1000) + ";" +
+                                        (Convert.ToInt32(reader["cardNumber"]) + 2000) + ";" +
                                         reader["externalId"] as string);
                                 }
                                 reader.Close();
@@ -1280,19 +1284,19 @@ and rc.raceClassStatus <> 'notUsed' order by cast(r.bibNumber as unsigned)";
                                              reader["firstName1"] as string + ";" +
                                              reader["familyName1"] as string + ";" +
                                              reader["card1"].ToString() + ";" +
-                                             (Convert.ToInt32(reader["card1"]) + 1000) + ";" +
+                                             (Convert.ToInt32(reader["card1"]) + 2000) + ";" +
                                              reader["Fiscode1"] as string + ";;" +
 
                                              reader["firstName2"] as string + ";" +
                                              reader["familyName2"] as string + ";" +
                                              reader["card2"].ToString() + ";" +
-                                             (string.IsNullOrEmpty(reader["card2"].ToString()) ? "" : (Convert.ToInt32(reader["card2"]) + 1000).ToString()) + ";" +
+                                             (string.IsNullOrEmpty(reader["card2"].ToString()) ? "" : (Convert.ToInt32(reader["card2"]) + 2000).ToString()) + ";" +
                                              reader["Fiscode2"] as string + ";;" +
 
                                              reader["firstName3"] as string + ";" +
                                              reader["familyName3"] as string + ";" +
                                              reader["card3"].ToString() + ";" +
-                                             (string.IsNullOrEmpty(reader["card3"].ToString()) ? "": (Convert.ToInt32(reader["card3"]) + 1000).ToString()) + ";" +
+                                             (string.IsNullOrEmpty(reader["card3"].ToString()) ? "": (Convert.ToInt32(reader["card3"]) + 2000).ToString()) + ";" +
                                              reader["Fiscode3"] as string + ";;" 
                                              
                                             /* +
