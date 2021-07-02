@@ -33,9 +33,9 @@ namespace EmiTagMerger
 
         private void btnRefreshPorts_Click(object sender, EventArgs e)
         {
-            comboBox1.DataSource = SerialPortUtilities.GetSerialPorts(); 
+            comboBox1.DataSource = SerialPortUtilities.GetSerialPorts().ToArray(); 
             comboBox1.DisplayMember = "Name";
-            comboBox2.DataSource = SerialPortUtilities.GetSerialPorts(); 
+            comboBox2.DataSource = SerialPortUtilities.GetSerialPorts().ToArray(); 
             comboBox2.DisplayMember = "Name";
         }
 
@@ -155,7 +155,7 @@ namespace EmiTagMerger
             if (ro.TagNo >= 0 && ro.PostPasses.Count > 0 && ro.PostPasses.Last().PostCode == m_ecuCode)
             {
                 ro.TimeOfReadout = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-dd") + " " + messageTime, "yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
-                ListBox lst = ro.TagNo < 1000 ? lstCard1 : lstCard2;
+                ListBox lst = ro.TagNo > 1000 ? lstCard1 : lstCard2;
                 lst.Invoke(new MethodInvoker(delegate
                 {
                     lst.Items.Clear();
@@ -163,8 +163,10 @@ namespace EmiTagMerger
                     {
                         lst.Items.Add(p.PostNo.ToString().PadLeft(2) + "  " + p.PostCode.ToString().PadLeft(3) + "  " + p.Time);
                     }
+                    lst.Tag = ro;
                 }));
 
+                updateMerge();
                /* var tr = OnTagRead;
                 if (tr != null)
                     tr(ro);*/
@@ -178,6 +180,50 @@ namespace EmiTagMerger
             }
         }
 
+        void updateMerge()
+        {
+            TagReadOut ro1 = lstCard1.Tag as TagReadOut;
+            TagReadOut ro2 = lstCard2.Tag as TagReadOut;
+            List<PostPass> postPasses = new List<PostPass>();
+
+            if (ro1 != null)
+            {
+                postPasses.AddRange(ro1.PostPasses);
+            }
+            if (ro2 != null)
+            {
+                postPasses.AddRange(ro1 != null ? ro2.PostPasses.Where(x => x.PostCode < 250) : ro2.PostPasses);
+            }
+
+            postPasses.Sort((x, y) => x.Time < y.Time ? -1 : 1);
+            for (int i = 1; i < postPasses.Count; i++)
+            {
+                if (postPasses[i].PostCode == postPasses[i-1].PostCode &&
+                    Math.Abs((postPasses[i].Time - postPasses[i-1].Time).TotalSeconds) < 3)
+                {
+                    postPasses.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            TagReadOut merged = new TagReadOut
+            {
+                PostPasses = postPasses,
+                TagNo = ro1 != null ? ro1.TagNo : ro2.TagNo,
+                TimeOfReadout = ro1 != null ? ro1.TimeOfReadout : ro2.TimeOfReadout
+            };
+
+            lstMerged.Invoke(new MethodInvoker(delegate
+            {
+                lstMerged.Items.Clear();
+                foreach (var p in merged.PostPasses)
+                {
+                    lstMerged.Items.Add(p.PostNo.ToString().PadLeft(2) + "  " + p.PostCode.ToString().PadLeft(3) + "  " + p.Time);
+                }
+                lstMerged.Tag = merged;
+            }));
+        }
+
         void sp_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
         {
             MessageBox.Show("Got error: " + e.EventType);
@@ -188,6 +234,54 @@ namespace EmiTagMerger
             {
                 btnConnectSource.Text = "Connect";
             }));
+        }
+
+        private void btnSend_Click(object sender, EventArgs e)
+        {
+            TagReadOut ro = lstMerged.Tag as TagReadOut;
+            string msg = "W" + ro.TimeOfReadout.ToString("HH:mm:ss.fff") + "\t" +
+                "C" + m_ecuCode + "\t" +
+                "N" + ro.TagNo + "\t";
+
+            for (int i = 0; i < ro.PostPasses.Count; i++)
+            {
+                msg += "P" + (i + 1) + "-" + ro.PostPasses[i].PostCode + "-" +
+                    ro.PostPasses[i].Time.ToString("hh\\:mm\\:ss") + "\t";
+            }
+
+            string data = msg;
+            List<byte> buf = new List<byte>();
+            buf.Add(0x02);
+            buf.AddRange(System.Text.Encoding.ASCII.GetBytes(msg));
+            buf.Add(0x03);
+
+            targetPort.Write(buf.ToArray(), 0, buf.Count);
+        }
+
+        private void btnConnectTarget_Click(object sender, EventArgs e)
+        {
+            if (targetPort != null)
+            {
+                ThreadPool.QueueUserWorkItem((obj) =>
+                {
+                    targetPort.Close();
+                    targetPort.Dispose();
+                    targetPort = null;
+                    btnConnectTarget.Invoke(new MethodInvoker(() =>
+                    {
+                        btnConnectTarget.Text = "Connect";
+                    }));
+                });
+            }
+            else
+            {
+                targetPort = new SerialPort((comboBox2.SelectedItem as SerialPortUtilities.COMPortInfo).PortName, 115200);
+                targetPort.WriteBufferSize = 10;
+                targetPort.ReceivedBytesThreshold = 1;
+                targetPort.Open();
+
+                btnConnectTarget.Text = "Disconnect";
+            }
         }
     }
 }

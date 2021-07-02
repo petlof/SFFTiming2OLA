@@ -6,3 +6,9 @@
 /.vs/SSFTimingOlaSync/v14/*.suo
 /PortMapper/bin/Debug
 /PortMapper/obj/Debug
+/EmiTagMerger/bin/Debug
+/EmiTagMerger/obj/Debug
+/*.user
+/.vs/SSFTimingOlaSync/v15
+/.vs/SSFTimingOlaSync/v16
+/PortMapper/*.user

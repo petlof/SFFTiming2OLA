@@ -51,10 +51,10 @@
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(638, 5);
-            this.button12.Margin = new System.Windows.Forms.Padding(4);
+            this.button12.Location = new System.Drawing.Point(718, 6);
+            this.button12.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(100, 26);
+            this.button12.Size = new System.Drawing.Size(112, 32);
             this.button12.TabIndex = 24;
             this.button12.Text = "Sync";
             this.button12.UseVisualStyleBackColor = true;
@@ -62,25 +62,26 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(348, 9);
+            this.label2.Location = new System.Drawing.Point(392, 11);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 17);
+            this.label2.Size = new System.Drawing.Size(103, 20);
             this.label2.TabIndex = 23;
             this.label2.Text = "Atomic Time";
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(439, 7);
+            this.textBox3.Location = new System.Drawing.Point(494, 9);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(192, 22);
+            this.textBox3.Size = new System.Drawing.Size(216, 26);
             this.textBox3.TabIndex = 22;
             // 
             // btnRefreshPorts
             // 
-            this.btnRefreshPorts.Location = new System.Drawing.Point(618, 44);
-            this.btnRefreshPorts.Margin = new System.Windows.Forms.Padding(4);
+            this.btnRefreshPorts.Location = new System.Drawing.Point(695, 55);
+            this.btnRefreshPorts.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnRefreshPorts.Name = "btnRefreshPorts";
-            this.btnRefreshPorts.Size = new System.Drawing.Size(129, 26);
+            this.btnRefreshPorts.Size = new System.Drawing.Size(145, 32);
             this.btnRefreshPorts.TabIndex = 21;
             this.btnRefreshPorts.Text = "Refresh ports";
             this.btnRefreshPorts.UseVisualStyleBackColor = true;
@@ -88,10 +89,10 @@
             // 
             // btnConnectSource
             // 
-            this.btnConnectSource.Location = new System.Drawing.Point(510, 44);
-            this.btnConnectSource.Margin = new System.Windows.Forms.Padding(4);
+            this.btnConnectSource.Location = new System.Drawing.Point(574, 55);
+            this.btnConnectSource.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnConnectSource.Name = "btnConnectSource";
-            this.btnConnectSource.Size = new System.Drawing.Size(100, 26);
+            this.btnConnectSource.Size = new System.Drawing.Size(112, 32);
             this.btnConnectSource.TabIndex = 20;
             this.btnConnectSource.Text = "Connect";
             this.btnConnectSource.UseVisualStyleBackColor = true;
@@ -101,136 +102,149 @@
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(13, 44);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBox1.Location = new System.Drawing.Point(15, 55);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(488, 24);
+            this.comboBox1.Size = new System.Drawing.Size(548, 28);
             this.comboBox1.TabIndex = 19;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 23);
+            this.label1.Location = new System.Drawing.Point(11, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 17);
+            this.label1.Size = new System.Drawing.Size(98, 20);
             this.label1.TabIndex = 25;
             this.label1.Text = "Source Port";
             // 
             // lstCard1
             // 
+            this.lstCard1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.lstCard1.FormattingEnabled = true;
-            this.lstCard1.ItemHeight = 16;
-            this.lstCard1.Location = new System.Drawing.Point(13, 139);
+            this.lstCard1.ItemHeight = 20;
+            this.lstCard1.Location = new System.Drawing.Point(15, 174);
+            this.lstCard1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lstCard1.Name = "lstCard1";
-            this.lstCard1.Size = new System.Drawing.Size(231, 228);
+            this.lstCard1.Size = new System.Drawing.Size(259, 264);
             this.lstCard1.TabIndex = 26;
             this.lstCard1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // lblCard1
             // 
             this.lblCard1.AutoSize = true;
-            this.lblCard1.Location = new System.Drawing.Point(12, 119);
+            this.lblCard1.Location = new System.Drawing.Point(14, 149);
             this.lblCard1.Name = "lblCard1";
-            this.lblCard1.Size = new System.Drawing.Size(46, 17);
+            this.lblCard1.Size = new System.Drawing.Size(54, 20);
             this.lblCard1.TabIndex = 28;
             this.lblCard1.Text = "Card1";
             // 
             // lblCard2
             // 
             this.lblCard2.AutoSize = true;
-            this.lblCard2.Location = new System.Drawing.Point(261, 119);
+            this.lblCard2.Location = new System.Drawing.Point(294, 149);
             this.lblCard2.Name = "lblCard2";
-            this.lblCard2.Size = new System.Drawing.Size(46, 17);
+            this.lblCard2.Size = new System.Drawing.Size(54, 20);
             this.lblCard2.TabIndex = 30;
             this.lblCard2.Text = "Card2";
             // 
             // lstCard2
             // 
+            this.lstCard2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.lstCard2.FormattingEnabled = true;
-            this.lstCard2.ItemHeight = 16;
-            this.lstCard2.Location = new System.Drawing.Point(262, 139);
+            this.lstCard2.ItemHeight = 20;
+            this.lstCard2.Location = new System.Drawing.Point(295, 174);
+            this.lstCard2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lstCard2.Name = "lstCard2";
-            this.lstCard2.Size = new System.Drawing.Size(239, 228);
+            this.lstCard2.Size = new System.Drawing.Size(268, 264);
             this.lstCard2.TabIndex = 29;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(507, 119);
+            this.label3.Location = new System.Drawing.Point(570, 149);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(56, 17);
+            this.label3.Size = new System.Drawing.Size(65, 20);
             this.label3.TabIndex = 32;
             this.label3.Text = "Merged";
             // 
             // lstMerged
             // 
+            this.lstMerged.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.lstMerged.FormattingEnabled = true;
-            this.lstMerged.ItemHeight = 16;
-            this.lstMerged.Location = new System.Drawing.Point(508, 139);
+            this.lstMerged.ItemHeight = 20;
+            this.lstMerged.Location = new System.Drawing.Point(572, 174);
+            this.lstMerged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lstMerged.Name = "lstMerged";
-            this.lstMerged.Size = new System.Drawing.Size(231, 228);
+            this.lstMerged.Size = new System.Drawing.Size(259, 264);
             this.lstMerged.TabIndex = 31;
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(540, 373);
-            this.btnSend.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSend.Location = new System.Drawing.Point(606, 464);
+            this.btnSend.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(198, 77);
+            this.btnSend.Size = new System.Drawing.Size(223, 96);
             this.btnSend.TabIndex = 33;
             this.btnSend.Text = "Send Merged Card";
             this.btnSend.UseVisualStyleBackColor = true;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 70);
+            this.label4.Location = new System.Drawing.Point(11, 88);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(80, 17);
+            this.label4.Size = new System.Drawing.Size(93, 20);
             this.label4.TabIndex = 37;
             this.label4.Text = "Target Port";
             // 
             // btnConnectTarget
             // 
-            this.btnConnectTarget.Location = new System.Drawing.Point(510, 91);
-            this.btnConnectTarget.Margin = new System.Windows.Forms.Padding(4);
+            this.btnConnectTarget.Location = new System.Drawing.Point(574, 114);
+            this.btnConnectTarget.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnConnectTarget.Name = "btnConnectTarget";
-            this.btnConnectTarget.Size = new System.Drawing.Size(100, 26);
+            this.btnConnectTarget.Size = new System.Drawing.Size(112, 32);
             this.btnConnectTarget.TabIndex = 35;
             this.btnConnectTarget.Text = "Connect";
             this.btnConnectTarget.UseVisualStyleBackColor = true;
+            this.btnConnectTarget.Click += new System.EventHandler(this.btnConnectTarget_Click);
             // 
             // comboBox2
             // 
             this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(13, 91);
-            this.comboBox2.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBox2.Location = new System.Drawing.Point(15, 114);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(488, 24);
+            this.comboBox2.Size = new System.Drawing.Size(548, 28);
             this.comboBox2.TabIndex = 34;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(68, 9);
+            this.label5.Location = new System.Drawing.Point(76, 11);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(67, 17);
+            this.label5.Size = new System.Drawing.Size(80, 20);
             this.label5.TabIndex = 39;
             this.label5.Text = "Ecu Time";
             // 
             // txtEcuTime
             // 
-            this.txtEcuTime.Location = new System.Drawing.Point(141, 7);
+            this.txtEcuTime.Location = new System.Drawing.Point(159, 9);
+            this.txtEcuTime.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtEcuTime.Name = "txtEcuTime";
-            this.txtEcuTime.Size = new System.Drawing.Size(201, 22);
+            this.txtEcuTime.Size = new System.Drawing.Size(226, 26);
             this.txtEcuTime.TabIndex = 38;
             // 
             // EmiTagMerger
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(751, 463);
+            this.ClientSize = new System.Drawing.Size(843, 577);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtEcuTime);
             this.Controls.Add(this.label4);
@@ -250,6 +264,7 @@
             this.Controls.Add(this.btnRefreshPorts);
             this.Controls.Add(this.btnConnectSource);
             this.Controls.Add(this.comboBox1);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "EmiTagMerger";
             this.Text = "EmiTag Merger";
             this.ResumeLayout(false);

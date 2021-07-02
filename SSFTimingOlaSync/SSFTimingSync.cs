@@ -399,7 +399,7 @@ and dbclass.classid = dbName.classid", ssfId);
                         if (reader["finishTime"] != null && reader["finishTime"] != DBNull.Value)
                         {
                             finishTime = ParseDateTime(reader["finishTime"].ToString());
-                            finishTime = finishTime.AddMilliseconds(-1 * finishTime.Millisecond);
+                           // finishTime = finishTime.AddMilliseconds(-1 * finishTime.Millisecond);
                         }
 
                         if (reader["RaceTime"] != null && reader["RaceTime"] != DBNull.Value)
@@ -1049,6 +1049,7 @@ and dbclass.classid = dbName.classid", ssfId);
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "*.csv|*.csv";
             sfd.Title = "Save startlist as";
+            int eventRaceId = (cmbRace.SelectedItem as ListComp).Id;
             if (sfd.ShowDialog(this) == DialogResult.OK)
             {
                 using (var sw = new StreamWriter(sfd.FileName, false, Encoding.Default))
@@ -1067,7 +1068,7 @@ and dbclass.classid = dbName.classid", ssfId);
                             pi.personId = p.personId and
                             ec.eventClassId=rc.eventClassId and
                             epc.cardId = r.electronicPunchingCardId and p.personId = e.competitorId 
-                            and e.entryId = r.entryId and rc.eventRaceId=1
+                            and e.entryId = r.entryId and rc.eventRaceId=" + eventRaceId + @"
                             and p.defaultOrganisationId=o.organisationId and rc.raceClassStatus <> 'notUsed' order by bibNumber";
                             cmd.CommandText = sql;
 
@@ -1082,7 +1083,7 @@ and dbclass.classid = dbName.classid", ssfId);
                                         reader["bibNumber"] as string + ";" +
                                         reader["startTime"] as string + ";;" +
                                         reader["cardNumber"].ToString() + ";" +
-                                        (Convert.ToInt32(reader["cardNumber"]) + 2000) + ";" +
+                                        (Convert.ToInt32(reader["cardNumber"]) - 1000) + ";" +
                                         reader["externalId"] as string);
                                 }
                                 reader.Close();
@@ -1452,6 +1453,74 @@ and rc.raceClassStatus <> 'notUsed' order by cast(r.bibNumber as unsigned)";
                 }
 
                 Clipboard.SetText(string.Join("\n", lines.ToArray()));
+            }
+        }
+
+        private void assignCardsAccordingToBibToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int eventRaceId = (cmbRace.SelectedItem as ListComp).Id;
+            using (var olaConnection = new MySqlConnection(ConfigurationManager.ConnectionStrings["ola"].ConnectionString))
+            {
+                olaConnection.Open();
+
+                Dictionary<int, int> toSet = new Dictionary<int, int>();
+
+                using (IDbCommand cmd = olaConnection.CreateCommand())
+                {
+                    cmd.CommandText = "select bibNumber,resultId, rc.eventRaceId from results,raceClasses rc where rc.raceClassId = results.raceClassId and results.electronicPunchingCardId is null and rc.eventRaceId=" + eventRaceId;
+
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            int tag = Convert.ToInt32(dr["bibNumber"]) + 1200;
+                            toSet.Add(Convert.ToInt32(dr["resultId"]), tag);
+                        }
+                        dr.Close();
+                    }
+
+                    foreach (var kvp in toSet)
+                    {
+                        cmd.CommandText = "insert into electronicPunchingCards (cardNumber,electronicPunchingCardType,modifyDate) values(" + kvp.Value + ",'Emit','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "')";
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "select cardId from electronicPunchingCards where cardNumber=" + kvp.Value;
+                        int cardId = Convert.ToInt32(cmd.ExecuteScalar());
+                        cmd.CommandText = "update results set electronicPunchingCardId=" + cardId + " where resultId=" + kvp.Key;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        private void assignSeedinggroupFromWorldRankingFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int eventId = (cmbOLA.SelectedItem as ListComp).Id;
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Select World Ranking CSV";
+            ofd.Filter = "CSV Files|*.csv";
+
+            if (ofd.ShowDialog(this) == DialogResult.OK)
+            {
+                string[] lines = File.ReadAllLines(ofd.FileName);
+                string header = lines[0];
+                lines = lines.Skip(1).ToArray();
+                int idxIofId = Array.IndexOf(header.Split(';'), "IOF ID");
+                int idxPos = Array.IndexOf(header.Split(';'), "WRS Position");
+                using (var olaConnection = new MySqlConnection(ConfigurationManager.ConnectionStrings["ola"].ConnectionString))
+                {
+                    olaConnection.Open();
+                    using (IDbCommand cmd = olaConnection.CreateCommand())
+                    {
+                        for (int i = 0; i < lines.Length; i++)
+                        {
+                            int iofId = Convert.ToInt32(lines[i].Split(';')[idxIofId]);
+                            int pos= Convert.ToInt32(lines[i].Split(';')[idxPos]);
+                            cmd.CommandText = "update entries set seedingGroup = " + (10000 - pos) + " where exists(select * from personIds ep where ep.personId = competitorId and ep.externalId= " + iofId + ") and eventId = " + eventId;
+                            cmd.ExecuteNonQuery();
+                           
+                        }
+                    }
+                }
             }
         }
     }
